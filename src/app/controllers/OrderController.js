@@ -5,27 +5,26 @@ import Order from '../models/Order';
 
 class OrderController {
     async index(req, res) {
-        // Falta tratamento para paginação
-        // Acrescentar mais informações a serem buscadas
+        const { page } = req.query;
+
         const orderAll = await Order.findAll({
             where: { canceled_at: null },
             attributes: [
                 'id',
-                'recipient_id',
-                'deliveryman_id',
-                'signature_id',
                 'product',
                 'start_date',
                 'end_date',
+                'signature_id',
             ],
             order: ['created_at'],
             limit: 5,
-            // offset: (page - 1) * 5,
+            offset: (page - 1) * 5,
             include: [
                 {
                     model: Recipient,
                     as: 'recipient',
                     attributes: [
+                        'id',
                         'name',
                         'address',
                         'number',
@@ -37,7 +36,7 @@ class OrderController {
                 {
                     model: DeliveryMan,
                     as: 'deliveryman',
-                    attributes: ['name'],
+                    attributes: ['id', 'name'],
                 },
             ],
         });
@@ -76,31 +75,45 @@ class OrderController {
         return res.json(order);
     }
 
-    // async update(req, res) {return res.json();}
-
-    async delete(req, res) {
+    async update(req, res) {
         const schema = Yup.object().shape({
-            id: Yup.number().required(),
+            id: Yup.string().required(),
+            recipient_id: Yup.number(),
+            deliveryman_id: Yup.number(),
+            product: Yup.string(),
         });
 
         if (!(await schema.isValid(req.body))) {
             return res.status(400).json({ error: 'Validations fails..' });
         }
 
-        const orderExist = await Recipient.destroy(req.body.id);
+        const orderExist = await Order.findByPk(req.body.id);
         if (!orderExist) {
             return res.status(400).json({ error: 'Order is not exist.' });
         }
 
-        orderExist.canceled_at = new Date();
+        const orderUpdate = await orderExist.update(req.body);
 
-        await orderExist.save();
+        return res.json(orderUpdate);
+    }
+
+    async delete(req, res) {
+        const orderExist = await Order.findByPk(req.params.id);
+        if (!orderExist) {
+            return res.status(400).json({ error: 'Order is not exist.' });
+        }
+
+        await orderExist.destroy();
+
+        // Tratamento para somente atualizar a data de cancelamento
+        // orderExist.canceled_at = new Date();
+        // await orderExist.save();
 
         // Pegar todos os dados do registro que foi inserido na tabela ORDER
         // Enviar e-mail para o entregador informando sobre a encomenda.
 
         // return res.json(order);
-        return res.json(orderExist);
+        return res.status(204).send();
     }
 }
 

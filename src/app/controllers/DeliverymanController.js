@@ -4,7 +4,7 @@ import File from '../models/File';
 
 class DeliverymanController {
     async index(req, res) {
-        const { page = 1 } = req.query;
+        const { page } = req.query;
 
         const deliverymens = await Deliveryman.findAll({
             attributes: ['id', 'name', 'email', 'avatar_id'],
@@ -118,13 +118,9 @@ class DeliverymanController {
             });
         }
 
-        await Deliveryman.destroy({
-            where: {
-                id,
-            },
-        });
+        await deliverymanExist.destroy();
 
-        return res.json(deliverymanExist);
+        return res.status(204).send();
     }
 }
 
