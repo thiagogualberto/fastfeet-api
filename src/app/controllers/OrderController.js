@@ -3,6 +3,9 @@ import Recipient from '../models/Recipients';
 import DeliveryMan from '../models/Deliveryman';
 import Order from '../models/Order';
 
+import NewDeliverMail from '../jobs/NewDeliverMail';
+import Queue from '../../lib/Queue';
+
 class OrderController {
     async index(req, res) {
         const { page } = req.query;
@@ -69,10 +72,14 @@ class OrderController {
 
         const order = await Order.create(req.body);
 
-        // Pegar todos os dados do registro que foi inserido na tabela ORDER
-        // Enviar e-mail para o entregador informando sobre a encomenda.
+        await Queue.add(NewDeliverMail.key, {
+            deliverymanExist,
+            product: req.body.product,
+            recipientExist,
+        });
 
         return res.json(order);
+        // return res.json({ ok: 'CADASTROU' });
     }
 
     async update(req, res) {
