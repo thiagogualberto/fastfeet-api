@@ -4,7 +4,11 @@ import DeliveryProblem from '../models/DeliveryProblem';
 
 class ProblemController {
     async index(req, res) {
-        const deliveryProblems = await DeliveryProblem.findAll();
+        const { id } = req.params;
+
+        const deliveryProblems = await DeliveryProblem.findAll({
+            where: { delivery_id: id },
+        });
 
         return res.json(deliveryProblems);
     }
