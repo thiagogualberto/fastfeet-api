@@ -180,7 +180,7 @@ Thank you!
 
 [![GitHub license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/thiagogualberto/fastfeet-api/blob/master/LICENSE.md)
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details
 </br></br>
 
 ---
