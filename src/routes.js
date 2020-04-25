@@ -51,12 +51,11 @@ routes.get('/deliveryman/:id/deliveries', DeliveryController.index);
 routes.put('/deliveryman/:id', DeliveryController.update);
 
 // Delivery Routes
-// routes.get('', ProblemController.show);
 routes.get('/delivery/:id/problems', ProblemController.index);
 routes.post('/delivery/:id/problems', ProblemController.store);
 
 routes.get('/delivery/problems', ProblemsDelivery.index);
-routes.delete('/problem/:id/cancel-delivery', ProblemsDelivery.update);
+routes.put('/problem/:id/cancel-delivery', ProblemsDelivery.update);
 
 routes.post('/files', upload.single('file'), FileController.store);
 
