@@ -3,6 +3,24 @@ import Deliveryman from '../models/Deliveryman';
 import File from '../models/File';
 
 class DeliverymanController {
+    async show(req, res) {
+        const deliverymens = await Deliveryman.findAll({
+            where: {
+                id: req.params.id,
+            },
+            attributes: ['id', 'name', 'email', 'avatar_id'],
+            include: [
+                {
+                    model: File,
+                    as: 'avatar',
+                    attributes: ['name', 'path', 'url'],
+                },
+            ],
+        });
+
+        return res.json(deliverymens);
+    }
+
     async index(req, res) {
         const { page } = req.query;
 

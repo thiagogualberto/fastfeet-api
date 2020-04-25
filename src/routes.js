@@ -12,6 +12,7 @@ import OrderController from './app/controllers/OrderController';
 import FileController from './app/controllers/FileController';
 import DeliveryController from './app/controllers/DeliveryController';
 import ProblemController from './app/controllers/ProblemController';
+import ProblemsDelivery from './app/controllers/ProblemsDelivery';
 
 const routes = new Router();
 const upload = multer(multerConfig);
@@ -30,25 +31,32 @@ routes.delete('/recipients/:id', RecipientController.delete);
 
 routes.put('/users', UserController.update);
 
-routes.get('/deliveryman', DeliverymanController.index);
+// Deliveryman Routes
 routes.get('/deliveryman/:id', DeliverymanController.show);
+routes.get('/deliveryman', DeliverymanController.index);
 routes.post('/deliveryman', DeliverymanController.store);
 routes.put('/deliveryman', DeliverymanController.update);
 routes.delete('/deliveryman/:id', DeliverymanController.delete);
 
+// Order Routes
 routes.get('/order', OrderController.index);
 routes.post('/order', OrderController.store);
 routes.put('/order', OrderController.update);
 routes.delete('/order/:id', OrderController.delete);
 
+// View Orders
 routes.get('/deliveryman/:id/deliveries', DeliveryController.index);
+
+// Change Order Status
 routes.put('/deliveryman/:id', DeliveryController.update);
 
+// Delivery Routes
 // routes.get('', ProblemController.show);
 routes.get('/delivery/:id/problems', ProblemController.index);
 routes.post('/delivery/:id/problems', ProblemController.store);
-// routes.put('', ProblemController.update);
-// routes.delete('/problem/:id/cancel-delivery', );
+
+routes.get('/delivery/problems', ProblemsDelivery.index);
+routes.delete('/problem/:id/cancel-delivery', ProblemsDelivery.update);
 
 routes.post('/files', upload.single('file'), FileController.store);
 
